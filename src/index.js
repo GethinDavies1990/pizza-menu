@@ -66,27 +66,33 @@ function Header() {
 }
 
 function Menu() {
+  const pizzas = pizzaData;
+  const numPizzas = pizzas.length;
   return (
     <main className='menu'>
       <h2>Menu</h2>
 
-      <ul className='pizzas'>
-        {pizzaData.map((pizza) => (
-          <Pizza pizzaObject={pizza} key={pizza.name} />
-        ))}
-      </ul>
+      {numPizzas > 0 ? (
+        <ul className='pizzas'>
+          {pizzas.map((pizza) => (
+            <Pizza pizzaObject={pizza} key={pizza.name} />
+          ))}
+        </ul>
+      ) : (
+        <p>We're still wokring on our menu, please come back later</p>
+      )}
     </main>
   );
 }
 
-function Pizza(props) {
+function Pizza({ pizzaObject }) {
   return (
     <li className='pizza'>
-      <img src={props.pizzaObject.photoName} alt={props.pizzaObject.name} />
+      <img src={pizzaObject.photoName} alt={pizzaObject.name} />
       <div>
-        <h3>{props.pizzaObject.name}</h3>
-        <p>{props.pizzaObject.ingredients}</p>
-        <span>{props.pizzaObject.price}</span>
+        <h3>{pizzaObject.name}</h3>
+        <p>{pizzaObject.ingredients}</p>
+        <span>{pizzaObject.price}</span>
       </div>
     </li>
   );
@@ -94,14 +100,33 @@ function Pizza(props) {
 
 function Footer() {
   const hour = new Date().getHours();
-  const openHour = 12;
+  const openHour = 15;
   const closeHour = 22;
   const isOpen = hour >= openHour && hour <= closeHour;
 
   return (
     <footer className='footer'>
-      {new Date().toLocaleTimeString()}. We're currently open
+      {isOpen ? (
+        <Order closeHour={closeHour} />
+      ) : (
+        <p>
+          Sorry we're closed, we are open between {openHour}:00 and {closeHour}
+          :00
+        </p>
+      )}
     </footer>
+  );
+}
+
+function Order({ closeHour, openHour }) {
+  return (
+    <div className='order'>
+      <p>
+        We're open from {openHour}:00 until {closeHour}:00. Come visit us or
+        order online
+      </p>
+      <button className='btn'>Order</button>
+    </div>
   );
 }
 
